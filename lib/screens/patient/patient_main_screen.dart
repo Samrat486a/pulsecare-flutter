@@ -17,33 +17,12 @@ class PatientMainScreen extends StatefulWidget {
 
 class _PatientMainScreenState extends State<PatientMainScreen> {
   int _currentIndex = 0;
-  late final PageController _pageController;
+  late final List<Widget> _tabs;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _currentIndex);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _onTabSelected(int index) {
-    if (_currentIndex == index) return;
-    setState(() => _currentIndex = index);
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 320),
-      curve: Curves.easeOutCubic,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Widget> tabs = [
+    _tabs = [
       HomeTab(
         user: widget.user,
         onNavigateToSearch: (specialty) => _onTabSelected(1),
@@ -52,7 +31,15 @@ class _PatientMainScreenState extends State<PatientMainScreen> {
       MyAppointmentsTab(patientId: widget.user?.uid ?? ''),
       PatientProfileTab(user: widget.user),
     ];
+  }
 
+  void _onTabSelected(int index) {
+    if (_currentIndex == index) return;
+    setState(() => _currentIndex = index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final navItems = [
       _NavItemData(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Home'),
       _NavItemData(icon: Icons.search_outlined, activeIcon: Icons.search_rounded, label: 'Find Doctor'),
@@ -61,10 +48,9 @@ class _PatientMainScreenState extends State<PatientMainScreen> {
     ];
 
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: tabs,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _tabs,
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

@@ -16,33 +16,12 @@ class DoctorMainScreen extends StatefulWidget {
 
 class _DoctorMainScreenState extends State<DoctorMainScreen> {
   int _currentIndex = 0;
-  late final PageController _pageController;
+  late final List<Widget> _tabs;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _currentIndex);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _onTabSelected(int index) {
-    if (_currentIndex == index) return;
-    setState(() => _currentIndex = index);
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 320),
-      curve: Curves.easeOutCubic,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Widget> tabs = [
+    _tabs = [
       DoctorDashboardTab(
         user: widget.user,
         onViewAppointments: () => _onTabSelected(1),
@@ -50,7 +29,15 @@ class _DoctorMainScreenState extends State<DoctorMainScreen> {
       DoctorAppointmentsTab(doctorId: widget.user?.uid ?? ''),
       DoctorProfileTab(user: widget.user),
     ];
+  }
 
+  void _onTabSelected(int index) {
+    if (_currentIndex == index) return;
+    setState(() => _currentIndex = index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final navItems = [
       _DoctorNavItem(icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard_rounded, label: 'OPD Console'),
       _DoctorNavItem(icon: Icons.pending_actions_outlined, activeIcon: Icons.pending_actions_rounded, label: 'Queue Requests'),
@@ -58,10 +45,9 @@ class _DoctorMainScreenState extends State<DoctorMainScreen> {
     ];
 
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: tabs,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _tabs,
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

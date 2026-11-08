@@ -6,6 +6,7 @@ import '../../services/database_service.dart';
 import '../../theme/app_theme.dart';
 import '../auth/login_screen.dart';
 import '../patient/patient_main_screen.dart';
+import '../admin/database_manager_screen.dart';
 
 class DoctorProfileTab extends StatefulWidget {
   final UserModel? user;
@@ -235,6 +236,70 @@ class _DoctorProfileTabState extends State<DoctorProfileTab> {
                         child: const Text('Switch', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
                       ),
                     ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+
+                // Live Firestore Database Explorer Action Card
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DatabaseManagerScreen()),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF0F172A), Color(0xFF0369A1)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: AppTheme.subtleShadow,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: const Icon(Icons.storage_rounded, color: Color(0xFF38BDF8), size: 24),
+                        ),
+                        const SizedBox(width: 14),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Firestore Database Explorer',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  SizedBox(width: 6),
+                                  CircleAvatar(radius: 3, backgroundColor: Color(0xFF10B981)),
+                                ],
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                'Inspect Doctors, Users & Appointments Live',
+                                style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 14),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),

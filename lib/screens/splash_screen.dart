@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
-import '../theme/app_theme.dart';
+import '../widgets/pulsecare_logo.dart';
 import 'auth/login_screen.dart';
 import 'patient/patient_main_screen.dart';
 import 'doctor/doctor_main_screen.dart';
@@ -78,29 +78,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 96,
-              height: 96,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppTheme.primaryColor, Color(0xFF0D9488)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x331D4ED8),
-                    blurRadius: 28,
-                    offset: Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.medical_services_rounded,
-                size: 48,
-                color: Colors.white,
-              ),
+            const PulseCareLogo(
+              size: 96,
+              showBadge: true,
+              showGlow: true,
             ),
             const SizedBox(height: 28),
             const Text(

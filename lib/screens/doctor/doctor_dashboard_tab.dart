@@ -4,6 +4,7 @@ import '../../models/user_model.dart';
 import '../../models/appointment_model.dart';
 import '../../services/database_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/pulsecare_logo.dart';
 
 class DoctorDashboardTab extends StatelessWidget {
   final UserModel? user;
@@ -25,8 +26,8 @@ class DoctorDashboardTab extends StatelessWidget {
       appBar: AppBar(
         title: const Row(
           children: [
-            Icon(Icons.local_hospital_rounded, color: AppTheme.primaryColor, size: 22),
-            SizedBox(width: 8),
+            PulseCareLogo(size: 32, showBadge: true, showGlow: false),
+            SizedBox(width: 10),
             Text(
               'Doctor Clinical Portal',
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),

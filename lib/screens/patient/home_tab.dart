@@ -3,6 +3,7 @@ import '../../models/user_model.dart';
 import '../../models/doctor_model.dart';
 import '../../services/database_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/pulsecare_logo.dart';
 import 'doctor_details_screen.dart';
 import 'find_doctor_screen.dart';
 
@@ -141,20 +142,7 @@ class HomeTab extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppTheme.primaryColor, Color(0xFF0D9488)],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.health_and_safety_rounded,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
+              const PulseCareLogo(size: 36, showBadge: true, showGlow: false),
               const SizedBox(width: 10),
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

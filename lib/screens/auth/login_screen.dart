@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/user_model.dart';
 import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/pulsecare_logo.dart';
 import '../patient/patient_main_screen.dart';
 import '../doctor/doctor_main_screen.dart';
 import 'register_screen.dart';
@@ -228,14 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Brand Mark
                       Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Icon(Icons.medical_services_rounded, color: Colors.white, size: 28),
-                          ),
+                          const PulseCareLogo(size: 52, showBadge: true),
                           const SizedBox(width: 16),
                           const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,14 +392,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 18),
                     Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AppTheme.primaryColor,
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: const Icon(Icons.health_and_safety_rounded, color: Colors.white, size: 24),
-                        ),
+                        const PulseCareLogo(size: 44, showBadge: true, showGlow: false),
                         const SizedBox(width: 14),
                         const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
