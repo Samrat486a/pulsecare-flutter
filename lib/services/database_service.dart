@@ -246,4 +246,34 @@ class DatabaseService {
       });
     } catch (_) {}
   }
+
+  // --- Logic explicitly specified in the Report (Section 4.7 & 5.7 Class Diagram) ---
+
+  // makeAppointment alias for Class Diagram 'makeAppointment()'
+  Future<String> makeAppointment(AppointmentModel appointment) => bookAppointment(appointment);
+
+  // cancelAppointment alias for Class Diagram 'cancelAppointment()'
+  Future<void> cancelAppointment(String appointmentId) =>
+      updateAppointmentStatus(appointmentId: appointmentId, status: 'cancelled');
+
+  // acceptAppointment / rejectAppointment for Use Case 'Accept/Reject Appointment Status'
+  Future<void> acceptAppointment(String appointmentId) =>
+      updateAppointmentStatus(appointmentId: appointmentId, status: 'confirmed');
+
+  Future<void> rejectAppointment(String appointmentId) =>
+      updateAppointmentStatus(appointmentId: appointmentId, status: 'rejected');
+
+  // deletePatient (from DFD Level 1 for Patient)
+  Future<void> deletePatient(String patientId) async {
+    try {
+      await _firestore.collection('users').doc(patientId).delete();
+    } catch (_) {}
+  }
+
+  // deleteDoctor (from DFD Level 1 for Doctor)
+  Future<void> deleteDoctor(String doctorId) async {
+    try {
+      await _doctorsCol.doc(doctorId).delete();
+    } catch (_) {}
+  }
 }

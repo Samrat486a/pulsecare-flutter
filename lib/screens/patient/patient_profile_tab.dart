@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/user_model.dart';
 import '../../services/auth_service.dart';
+import '../../services/database_service.dart';
 import '../../theme/app_theme.dart';
 import '../auth/login_screen.dart';
 import '../doctor/doctor_main_screen.dart';
@@ -184,13 +185,65 @@ class PatientProfileTab extends StatelessWidget {
                     (route) => false,
                   );
                 },
-                icon: const Icon(Icons.logout_rounded, color: AppTheme.errorColor),
-                label: const Text('Sign Out', style: TextStyle(color: AppTheme.errorColor, fontWeight: FontWeight.w800)),
+                icon: const Icon(Icons.logout_rounded, color: AppTheme.textPrimary),
+                label: const Text('Logout', style: TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w800)),
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFFFECDD3)),
+                  side: const BorderSide(color: Color(0xFFCBD5E1)),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Delete Account (Matches Report Page 27 & DFD Level 1)
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      title: const Text('Delete Patient Account?'),
+                      content: const Text(
+                        'Are you sure you want to delete this patient profile and all medical records?',
+                        style: TextStyle(color: AppTheme.textSecondary),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: const Text('Cancel'),
+                        ),
+                        FilledButton(
+                          style: FilledButton.styleFrom(backgroundColor: const Color(0xFFDC2626)),
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirm == true) {
+                    final dbService = DatabaseService();
+                    if (user != null) {
+                      await dbService.deletePatient(user!.uid);
+                    }
+                    await authService.signOut();
+                    if (!context.mounted) return;
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      (route) => false,
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFDC2626), // Report Page 27 red button
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                ),
+                child: const Text('Delete account', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
               ),
             ),
           ],

@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DoctorModel {
-  final String id;
+  final String id; // DoctorID
   final String name;
   final String email;
   final String phone;
+  final String licenseNo; // LicenseNO from Class Diagram
+  final int deptId; // DeptID from Class Diagram
   final String specialty;
   final double rating;
   final int reviewCount;
@@ -22,6 +24,8 @@ class DoctorModel {
     required this.name,
     required this.email,
     required this.phone,
+    this.licenseNo = 'MCI-84910-KMC',
+    this.deptId = 1,
     required this.specialty,
     this.rating = 5.0,
     this.reviewCount = 0,
@@ -44,6 +48,8 @@ class DoctorModel {
       name: data['name'] ?? '',
       email: data['email'] ?? '',
       phone: data['phone'] ?? '',
+      licenseNo: data['licenseNo'] ?? 'MCI-84910-KMC',
+      deptId: (data['deptId'] is num) ? (data['deptId'] as num).toInt() : 1,
       specialty: data['specialty'] ?? 'General Physician',
       rating: (data['rating'] is num) ? (data['rating'] as num).toDouble() : 5.0,
       reviewCount: (data['reviewCount'] is num) ? (data['reviewCount'] as num).toInt() : 0,
@@ -55,7 +61,7 @@ class DoctorModel {
       about: data['about'] ?? '',
       education: data['education'] ?? '',
       experience: data['experience'] ?? '',
-      availableDays: List<String>.from(data['availableDays'] ?? ['Monday', 'Wednesday', 'Friday']),
+      availableDays: List<String>.from(data['availableDays'] ?? ['Sunday', 'Wednesday']),
       availableSlots: List<String>.from(data['availableSlots'] ?? ['10:00 AM - 11:30 AM', '11:30 AM - 02:30 PM']),
     );
   }
@@ -65,6 +71,8 @@ class DoctorModel {
       'name': name,
       'email': email,
       'phone': phone,
+      'licenseNo': licenseNo,
+      'deptId': deptId,
       'specialty': specialty,
       'rating': rating,
       'reviewCount': reviewCount,

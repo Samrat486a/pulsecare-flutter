@@ -301,12 +301,13 @@ class _DoctorProfileTabState extends State<DoctorProfileTab> {
                         : const Text('Save Practice Changes'),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
-                // Sign Out
+                // Logout Button (Matches Report Page 27)
                 SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton.icon(
+                  height: 48,
+                  child: ElevatedButton(
                     onPressed: () async {
                       await _authService.signOut();
                       if (!context.mounted) return;
@@ -316,11 +317,60 @@ class _DoctorProfileTabState extends State<DoctorProfileTab> {
                         (route) => false,
                       );
                     },
-                    icon: const Icon(Icons.logout_rounded, color: AppTheme.errorColor),
-                    label: const Text('Sign Out', style: TextStyle(color: AppTheme.errorColor, fontWeight: FontWeight.bold)),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Color(0xFFFECDD3)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1E293B),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
+                    child: const Text('Logout', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Delete Account Button (Red - Matches Report Page 27)
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          title: const Text('Delete Doctor Account?'),
+                          content: const Text(
+                            'Are you sure you want to delete this doctor account? This action will remove your public clinical profile.',
+                            style: TextStyle(color: AppTheme.textSecondary),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx, false),
+                              child: const Text('Cancel'),
+                            ),
+                            FilledButton(
+                              style: FilledButton.styleFrom(backgroundColor: const Color(0xFFDC2626)),
+                              onPressed: () => Navigator.pop(ctx, true),
+                              child: const Text('Delete'),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (confirm == true) {
+                        await _dbService.deleteDoctor(doctorId);
+                        await _authService.signOut();
+                        if (!context.mounted) return;
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          (route) => false,
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFDC2626), // Report Page 27 red button
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    ),
+                    child: const Text('Delete account', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                   ),
                 ),
                 const SizedBox(height: 20),

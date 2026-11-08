@@ -398,7 +398,7 @@ class _DoctorItemCardState extends State<_DoctorItemCard> {
                         const SizedBox(width: 8),
                         const Icon(Icons.star_rounded, size: 16, color: AppTheme.accentColor),
                         Text(
-                          ' ${doc.rating} (${doc.reviewCount})',
+                          ' (${doc.reviewCount})',
                           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF475569)),
                         ),
                       ],
@@ -414,7 +414,7 @@ class _DoctorItemCardState extends State<_DoctorItemCard> {
                 ),
               ),
 
-              // Fee & Button
+              // Fee & Circular Arrow Action (Matches Report Page 27)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -428,17 +428,18 @@ class _DoctorItemCardState extends State<_DoctorItemCard> {
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
-                      color: _isHovered ? const Color(0xFF1D4ED8) : AppTheme.primaryColor,
-                      borderRadius: BorderRadius.circular(10),
+                      shape: BoxShape.circle,
+                      color: _isHovered ? AppTheme.primaryColor : const Color(0xFFF1F5F9),
+                      border: Border.all(color: const Color(0xFFCBD5E1), width: 1.2),
                     ),
-                    child: const Text(
-                      'Book',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                    child: Center(
+                      child: Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 16,
+                        color: _isHovered ? Colors.white : const Color(0xFF334155),
                       ),
                     ),
                   ),

@@ -78,66 +78,55 @@ class HomeTab extends StatelessWidget {
       {'label': 'Oncology & Chemo', 'specialty': 'Oncologist', 'icon': Icons.healing_rounded, 'color': const Color(0xFFD97706)},
     ];
 
+    // 6 Core Medical Services (Exactly matching Internship Project Report Page 25)
     final medicalServices = [
       {
-        'title': 'Cardiology',
-        'subtitle': 'Heart & Vascular',
-        'desc': 'ECG, Angioplasty & Preventive Heart Health.',
-        'icon': Icons.favorite_rounded,
-        'specialty': 'Cardiologist',
-        'bgGradient': [const Color(0xFFEFF6FF), const Color(0xFFDBEAFE)],
-        'iconColor': const Color(0xFF2563EB),
-        'count': '8 Specialists',
-      },
-      {
-        'title': 'Neurology',
-        'subtitle': 'Brain & Spine',
-        'desc': 'Stroke, Migraine & Neurological Rehabilitation.',
-        'icon': Icons.psychology_rounded,
-        'specialty': 'Neurologist',
-        'bgGradient': [const Color(0xFFF0FDF4), const Color(0xFFDCFCE7)],
-        'iconColor': const Color(0xFF16A34A),
-        'count': '6 Specialists',
-      },
-      {
-        'title': 'General Surgery',
-        'subtitle': 'Laparoscopic Care',
-        'desc': 'Advanced Minimally Invasive & Trauma Surgery.',
-        'icon': Icons.medical_services_rounded,
-        'specialty': 'Surgeon',
-        'bgGradient': [const Color(0xFFFDF4FF), const Color(0xFFF5D0FE)],
-        'iconColor': const Color(0xFFC026D3),
-        'count': '11 Specialists',
-      },
-      {
-        'title': 'Obstetrics',
-        'subtitle': 'Maternal & Delivery',
-        'desc': 'High-risk Pregnancy & Fetal Medicine.',
-        'icon': Icons.pregnant_woman_rounded,
-        'specialty': 'Obstetrician & Gynecologist',
-        'bgGradient': [const Color(0xFFFFF1F2), const Color(0xFFFFE4E6)],
-        'iconColor': const Color(0xFFE11D48),
-        'count': '7 Specialists',
-      },
-      {
-        'title': 'Oncology',
-        'subtitle': 'Cancer Therapy',
-        'desc': 'Targeted Chemo & Precision Oncology Care.',
-        'icon': Icons.healing_rounded,
+        'number': '1',
+        'title': 'Cancer Care',
+        'desc': 'We provide advanced cancer care with cutting-edge treatments, expert medical teams and personalized support for every patient.',
         'specialty': 'Oncologist',
-        'bgGradient': [const Color(0xFFFFFBEB), const Color(0xFFFEF3C7)],
-        'iconColor': const Color(0xFFD97706),
-        'count': '5 Specialists',
+        'numBg': const Color(0xFFFEF3C7),
+        'numColor': const Color(0xFFD97706),
       },
       {
-        'title': 'Psychiatry',
-        'subtitle': 'Mental Health',
-        'desc': 'Holistic Cognitive Counseling & Therapy.',
-        'icon': Icons.mood_rounded,
+        'number': '2',
+        'title': 'Labor & Delivery',
+        'desc': 'Our labor and delivery team offers expert care for mothers and newborns. Our team ensures a safe, supportive childbirth experience.',
+        'specialty': 'Obstetrician & Gynecologist',
+        'numBg': const Color(0xFFF3E8FF),
+        'numColor': const Color(0xFF7E22CE),
+      },
+      {
+        'number': '3',
+        'title': 'Heart & Vascular',
+        'desc': 'Our heart and vascular specialists deliver expert care with advanced treatments. We provide personalized support for every patient.',
+        'specialty': 'Cardiologist',
+        'numBg': const Color(0xFFCCFBF1),
+        'numColor': const Color(0xFF0F766E),
+      },
+      {
+        'number': '4',
+        'title': 'Mental Health',
+        'desc': 'We offer compassionate mental health care with personalized treatment plans. Our team supports patients on their path to wellness.',
         'specialty': 'Psychiatrist',
-        'bgGradient': [const Color(0xFFF5F3FF), const Color(0xFFEDE9FE)],
-        'iconColor': const Color(0xFF7C3AED),
-        'count': '9 Specialists',
+        'numBg': const Color(0xFFE0F2FE),
+        'numColor': const Color(0xFF0369A1),
+      },
+      {
+        'number': '5',
+        'title': 'Neurology',
+        'desc': 'Our neurology team provides expert care for complex brain and nerve conditions. We offer personalized treatment for every patient.',
+        'specialty': 'Neurologist',
+        'numBg': const Color(0xFFFEF3C7),
+        'numColor': const Color(0xFFB45309),
+      },
+      {
+        'number': '6',
+        'title': 'Burn Treatment',
+        'desc': 'We offer specialized burn treatment with advanced care techniques. Our team provides personalized support for each patient\'s recovery.',
+        'specialty': 'Surgeon',
+        'numBg': const Color(0xFFF1F5F9),
+        'numColor': const Color(0xFF475569),
       },
     ];
 
@@ -494,20 +483,19 @@ class HomeTab extends StatelessWidget {
             ),
             const SizedBox(height: 14),
 
-            // Specialty Cards Grid
+            // Clinical Services Grid (Matching Report Page 25)
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 1.15,
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 14,
+                childAspectRatio: 0.92,
               ),
               itemCount: medicalServices.length,
               itemBuilder: (context, index) {
                 final item = medicalServices[index];
-                final gradients = item['bgGradient'] as List<Color>;
 
                 return Material(
                   color: Colors.transparent,
@@ -524,66 +512,74 @@ class HomeTab extends StatelessWidget {
                     },
                     borderRadius: BorderRadius.circular(20),
                     child: Container(
-                      padding: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFFF1F5F9)),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
                         boxShadow: AppTheme.subtleShadow,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            item['title'] as String,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: Text(
+                              item['desc'] as String,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                height: 1.45,
+                                color: Color(0xFF64748B),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              // Circular Arrow Button (Matches Report Page 25)
                               Container(
-                                padding: const EdgeInsets.all(10),
+                                width: 34,
+                                height: 34,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: gradients),
-                                  borderRadius: BorderRadius.circular(14),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: const Color(0xFFCBD5E1), width: 1.2),
                                 ),
-                                child: Icon(
-                                  item['icon'] as IconData,
-                                  color: item['iconColor'] as Color,
-                                  size: 22,
+                                child: const Center(
+                                  child: Icon(Icons.arrow_forward_rounded, size: 16, color: Color(0xFF334155)),
                                 ),
                               ),
+                              // Number Badge (Matches Report Page 25: 1, 2, 3, 4, 5, 6)
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                width: 32,
+                                height: 32,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF8FAFC),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                                  color: item['numBg'] as Color,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: Text(
-                                  item['count'] as String,
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppTheme.textSecondary,
+                                child: Center(
+                                  child: Text(
+                                    item['number'] as String,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 13,
+                                      color: item['numColor'] as Color,
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
-                          ),
-                          const Spacer(),
-                          Text(
-                            item['title'] as String,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: AppTheme.textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            item['subtitle'] as String,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: AppTheme.textMuted,
-                            ),
                           ),
                         ],
                       ),
