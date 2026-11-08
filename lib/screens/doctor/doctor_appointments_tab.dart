@@ -42,21 +42,10 @@ class _DoctorAppointmentsTabState extends State<DoctorAppointmentsTab> {
                 itemBuilder: (context, idx) {
                   final f = _filters[idx];
                   final isSelected = _selectedFilter == f;
-                  return ChoiceChip(
-                    label: Text(f == 'Rejected' ? 'Declined' : f),
-                    selected: isSelected,
-                    onSelected: (val) {
-                      if (val) setState(() => _selectedFilter = f);
-                    },
-                    selectedColor: AppTheme.primaryColor,
-                    labelStyle: TextStyle(
-                      color: isSelected ? Colors.white : AppTheme.textPrimary,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      fontSize: 13,
-                    ),
-                    backgroundColor: const Color(0xFFF1F5F9),
-                    side: BorderSide.none,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  return _DoctorRequestHoverFilterChip(
+                    label: f == 'Rejected' ? 'Declined' : f,
+                    isSelected: isSelected,
+                    onTap: () => setState(() => _selectedFilter = f),
                   );
                 },
               ),
@@ -93,11 +82,14 @@ class _DoctorAppointmentsTabState extends State<DoctorAppointmentsTab> {
                   );
                 }
 
-                return ListView.separated(
-                  padding: const EdgeInsets.all(20),
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 14),
-                  itemBuilder: (context, index) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: ListView.separated(
+                    key: ValueKey('req_list_$_selectedFilter'),
+                    padding: const EdgeInsets.all(20),
+                    itemCount: filtered.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 14),
+                    itemBuilder: (context, index) {
                     final appt = filtered[index];
 
                     return Container(
@@ -262,14 +254,15 @@ class _DoctorAppointmentsTabState extends State<DoctorAppointmentsTab> {
                       ),
                     );
                   },
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildStatusBadge(String status) {
     Color bg;
@@ -306,6 +299,60 @@ class _DoctorAppointmentsTabState extends State<DoctorAppointmentsTab> {
       child: Text(
         label,
         style: TextStyle(color: text, fontWeight: FontWeight.bold, fontSize: 11),
+      ),
+    );
+  }
+}
+
+class _DoctorRequestHoverFilterChip extends StatefulWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _DoctorRequestHoverFilterChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  State<_DoctorRequestHoverFilterChip> createState() => _DoctorRequestHoverFilterChipState();
+}
+
+class _DoctorRequestHoverFilterChipState extends State<_DoctorRequestHoverFilterChip> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? AppTheme.primaryColor
+                : (_isHovered ? const Color(0xFFE2E8F0) : const Color(0xFFF1F5F9)),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: widget.isSelected
+                  ? AppTheme.primaryColor
+                  : (_isHovered ? const Color(0xFFCBD5E1) : Colors.transparent),
+            ),
+          ),
+          child: Text(
+            widget.label,
+            style: TextStyle(
+              color: widget.isSelected ? Colors.white : AppTheme.textPrimary,
+              fontWeight: widget.isSelected ? FontWeight.w800 : FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
+        ),
       ),
     );
   }

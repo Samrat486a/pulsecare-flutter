@@ -301,25 +301,10 @@ class _MyAppointmentsTabState extends State<MyAppointmentsTab> {
                   final filter = _filters[index];
                   final isSelected = _selectedFilter == filter;
 
-                  return ChoiceChip(
-                    label: Text(filter),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      if (selected) {
-                        setState(() => _selectedFilter = filter);
-                      }
-                    },
-                    selectedColor: AppTheme.primaryColor,
-                    labelStyle: TextStyle(
-                      color: isSelected ? Colors.white : AppTheme.textPrimary,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                    backgroundColor: const Color(0xFFF1F5F9),
-                    side: BorderSide.none,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                  return _AppointmentHoverFilterChip(
+                    label: filter,
+                    isSelected: isSelected,
+                    onTap: () => setState(() => _selectedFilter = filter),
                   );
                 },
               ),
@@ -398,16 +383,19 @@ class _MyAppointmentsTabState extends State<MyAppointmentsTab> {
                   );
                 }
 
-                return ListView.separated(
-                  padding: const EdgeInsets.all(18),
-                  itemCount: appointments.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) {
-                    final apt = appointments[index];
-                    final dateStr = DateFormat('EEE, MMM d, yyyy').format(apt.appointmentDate);
-                    final tokenStr = '#OPD-${apt.id.hashCode.abs().toString().padLeft(4, '0').substring(0, 4)}';
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: ListView.separated(
+                    key: ValueKey('apt_list_$_selectedFilter'),
+                    padding: const EdgeInsets.all(18),
+                    itemCount: appointments.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 16),
+                    itemBuilder: (context, index) {
+                      final apt = appointments[index];
+                      final dateStr = DateFormat('EEE, MMM d, yyyy').format(apt.appointmentDate);
+                      final tokenStr = '#OPD-${apt.id.hashCode.abs().toString().padLeft(4, '0').substring(0, 4)}';
 
-                    return Container(
+                      return Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(22),
@@ -598,11 +586,66 @@ class _MyAppointmentsTabState extends State<MyAppointmentsTab> {
                       ),
                     );
                   },
-                );
-              },
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    ),
+  );
+}
+}
+
+class _AppointmentHoverFilterChip extends StatefulWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _AppointmentHoverFilterChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  State<_AppointmentHoverFilterChip> createState() => _AppointmentHoverFilterChipState();
+}
+
+class _AppointmentHoverFilterChipState extends State<_AppointmentHoverFilterChip> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? AppTheme.primaryColor
+                : (_isHovered ? const Color(0xFFE2E8F0) : const Color(0xFFF1F5F9)),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: widget.isSelected
+                  ? AppTheme.primaryColor
+                  : (_isHovered ? const Color(0xFFCBD5E1) : Colors.transparent),
             ),
           ),
-        ],
+          child: Text(
+            widget.label,
+            style: TextStyle(
+              color: widget.isSelected ? Colors.white : AppTheme.textPrimary,
+              fontWeight: widget.isSelected ? FontWeight.w800 : FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
+        ),
       ),
     );
   }
