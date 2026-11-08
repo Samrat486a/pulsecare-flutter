@@ -110,7 +110,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Join Doctor Now',
+                  'Join PulseCare',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,

@@ -46,7 +46,7 @@ class HomeTab extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: CircleAvatar(backgroundColor: Color(0xFFEFF6FF), child: Icon(Icons.local_hospital, color: Colors.blue)),
-              title: Text('Doctor Now Emergency Triage', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+              title: Text('PulseCare Emergency Triage', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
               subtitle: Text('+91 1800-419-0099 (Priority Line)'),
             ),
           ],
@@ -135,46 +135,52 @@ class HomeTab extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppTheme.primaryColor, Color(0xFF0D9488)],
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.health_and_safety_rounded,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'DOCTOR NOW',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 17,
-                    letterSpacing: 0.8,
-                    color: AppTheme.textPrimary,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppTheme.primaryColor, Color(0xFF0D9488)],
                   ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                Text(
-                  'Aura Clinical Hospital Network',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: AppTheme.textMuted,
-                    fontWeight: FontWeight.w500,
+                child: const Icon(
+                  Icons.health_and_safety_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 10),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'PULSECARE',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 17,
+                      letterSpacing: 1.2,
+                      color: AppTheme.textPrimary,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    'Clinical Hospital Network',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppTheme.textMuted,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         actions: [
           Container(
@@ -235,8 +241,11 @@ class HomeTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 8,
+                    runSpacing: 8,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -258,6 +267,7 @@ class HomeTab extends StatelessWidget {
                         ),
                       ),
                       const Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.star_rounded, size: 16, color: Color(0xFFFBBF24)),
                           SizedBox(width: 4),
@@ -483,108 +493,116 @@ class HomeTab extends StatelessWidget {
             ),
             const SizedBox(height: 14),
 
-            // Clinical Services Grid (Matching Report Page 25)
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 14,
-                childAspectRatio: 0.92,
-              ),
-              itemCount: medicalServices.length,
-              itemBuilder: (context, index) {
-                final item = medicalServices[index];
+            // Clinical Services Grid (Matching Report Page 25) - Fully responsive across all screen widths
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final width = constraints.maxWidth;
+                final crossAxisCount = width > 750 ? 3 : 2;
+                final aspectRatio = width < 330 ? 0.78 : (width < 370 ? 0.85 : 0.92);
 
-                return Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => FindDoctorScreen(
-                            initialSpecialty: item['specialty'] as String,
-                          ),
-                        ),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
+                    childAspectRatio: aspectRatio,
+                  ),
+                  itemCount: medicalServices.length,
+                  itemBuilder: (context, index) {
+                    final item = medicalServices[index];
+
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => FindDoctorScreen(
+                                initialSpecialty: item['specialty'] as String,
+                              ),
+                            ),
+                          );
+                        },
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
-                        boxShadow: AppTheme.subtleShadow,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item['title'] as String,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                              color: AppTheme.textPrimary,
-                            ),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                            boxShadow: AppTheme.subtleShadow,
                           ),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: Text(
-                              item['desc'] as String,
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 11,
-                                height: 1.45,
-                                color: Color(0xFF64748B),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Circular Arrow Button (Matches Report Page 25)
-                              Container(
-                                width: 34,
-                                height: 34,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: const Color(0xFFCBD5E1), width: 1.2),
-                                ),
-                                child: const Center(
-                                  child: Icon(Icons.arrow_forward_rounded, size: 16, color: Color(0xFF334155)),
+                              Text(
+                                item['title'] as String,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 16,
+                                  color: AppTheme.textPrimary,
                                 ),
                               ),
-                              // Number Badge (Matches Report Page 25: 1, 2, 3, 4, 5, 6)
-                              Container(
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: item['numBg'] as Color,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    item['number'] as String,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 13,
-                                      color: item['numColor'] as Color,
-                                    ),
+                              const SizedBox(height: 8),
+                              Expanded(
+                                child: Text(
+                                  item['desc'] as String,
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    height: 1.45,
+                                    color: Color(0xFF64748B),
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Circular Arrow Button (Matches Report Page 25)
+                                  Container(
+                                    width: 34,
+                                    height: 34,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: const Color(0xFFCBD5E1), width: 1.2),
+                                    ),
+                                    child: const Center(
+                                      child: Icon(Icons.arrow_forward_rounded, size: 16, color: Color(0xFF334155)),
+                                    ),
+                                  ),
+                                  // Number Badge (Matches Report Page 25: 1, 2, 3, 4, 5, 6)
+                                  Container(
+                                    width: 32,
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      color: item['numBg'] as Color,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        item['number'] as String,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 13,
+                                          color: item['numColor'] as Color,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               },
             ),

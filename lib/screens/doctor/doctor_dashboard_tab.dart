@@ -153,48 +153,74 @@ class DoctorDashboardTab extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildKPI(
-                        title: 'Pending',
-                        count: '$pendingCount',
-                        color: const Color(0xFFD97706),
-                        bg: const Color(0xFFFEF3C7),
-                        icon: Icons.hourglass_top_rounded,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _buildKPI(
-                        title: 'Confirmed',
-                        count: '$confirmedCount',
-                        color: const Color(0xFF16A34A),
-                        bg: const Color(0xFFDCFCE7),
-                        icon: Icons.check_circle_rounded,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _buildKPI(
-                        title: 'Total Visits',
-                        count: '$totalCount',
-                        color: const Color(0xFF7C3AED),
-                        bg: const Color(0xFFF5F3FF),
-                        icon: Icons.people_alt_rounded,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _buildKPI(
-                        title: 'Revenue',
-                        count: '₹${totalRevenue.toInt()}',
-                        color: const Color(0xFF2563EB),
-                        bg: const Color(0xFFDBEAFE),
-                        icon: Icons.currency_rupee_rounded,
-                      ),
-                    ),
-                  ],
+                Builder(
+                  builder: (context) {
+                    final screenWidth = MediaQuery.of(context).size.width;
+                    final isCompact = screenWidth < 420;
+
+                    final kpi1 = _buildKPI(
+                      title: 'Pending',
+                      count: '$pendingCount',
+                      color: const Color(0xFFD97706),
+                      bg: const Color(0xFFFEF3C7),
+                      icon: Icons.hourglass_top_rounded,
+                    );
+                    final kpi2 = _buildKPI(
+                      title: 'Confirmed',
+                      count: '$confirmedCount',
+                      color: const Color(0xFF16A34A),
+                      bg: const Color(0xFFDCFCE7),
+                      icon: Icons.check_circle_rounded,
+                    );
+                    final kpi3 = _buildKPI(
+                      title: 'Total Visits',
+                      count: '$totalCount',
+                      color: const Color(0xFF7C3AED),
+                      bg: const Color(0xFFF5F3FF),
+                      icon: Icons.people_alt_rounded,
+                    );
+                    final kpi4 = _buildKPI(
+                      title: 'Revenue',
+                      count: '₹${totalRevenue.toInt()}',
+                      color: const Color(0xFF2563EB),
+                      bg: const Color(0xFFDBEAFE),
+                      icon: Icons.currency_rupee_rounded,
+                    );
+
+                    if (isCompact) {
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(child: kpi1),
+                              const SizedBox(width: 8),
+                              Expanded(child: kpi2),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(child: kpi3),
+                              const SizedBox(width: 8),
+                              Expanded(child: kpi4),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+
+                    return Row(
+                      children: [
+                        Expanded(child: kpi1),
+                        const SizedBox(width: 8),
+                        Expanded(child: kpi2),
+                        const SizedBox(width: 8),
+                        Expanded(child: kpi3),
+                        const SizedBox(width: 8),
+                        Expanded(child: kpi4),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 28),
 
@@ -400,31 +426,37 @@ class DoctorDashboardTab extends StatelessWidget {
     required IconData icon,
   }) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 22),
-          const SizedBox(height: 10),
-          Text(
-            count,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: color,
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              count,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+                color: color,
+              ),
             ),
           ),
           const SizedBox(height: 2),
           Text(
             title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: color.withValues(alpha: 0.8),
+              color: color.withValues(alpha: 0.85),
             ),
           ),
         ],

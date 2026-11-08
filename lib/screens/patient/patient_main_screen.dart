@@ -82,20 +82,26 @@ class _PatientMainScreenState extends State<PatientMainScreen> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(navItems.length, (index) {
-              final item = navItems[index];
-              final isSelected = _currentIndex == index;
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(navItems.length, (index) {
+                  final item = navItems[index];
+                  final isSelected = _currentIndex == index;
 
-              return _AnimatedNavTab(
-                icon: item.icon,
-                activeIcon: item.activeIcon,
-                label: item.label,
-                isSelected: isSelected,
-                onTap: () => _onTabSelected(index),
-              );
-            }),
+                  return _AnimatedNavTab(
+                    icon: item.icon,
+                    activeIcon: item.activeIcon,
+                    label: item.label,
+                    isSelected: isSelected,
+                    onTap: () => _onTabSelected(index),
+                  );
+                }),
+              ),
+            ),
           ),
         ),
       ),
@@ -152,7 +158,10 @@ class _AnimatedNavTabState extends State<_AnimatedNavTab> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 220),
           curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width < 360 ? 10 : 16,
+            vertical: 8,
+          ),
           decoration: BoxDecoration(
             color: widget.isSelected
                 ? const Color(0xFFEFF6FF)

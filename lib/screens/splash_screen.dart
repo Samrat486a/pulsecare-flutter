@@ -104,17 +104,17 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 28),
             const Text(
-              'DOCTOR NOW',
+              'PULSECARE',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w900,
-                letterSpacing: 2.0,
+                letterSpacing: 2.5,
                 color: Colors.white,
               ),
             ),
             const SizedBox(height: 8),
             const Text(
-              'Aura Clinical Hospital Network & OPD Dispatch',
+              'Clinical Hospital Network & OPD Dispatch',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,

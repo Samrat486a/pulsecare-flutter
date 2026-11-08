@@ -79,20 +79,26 @@ class _DoctorMainScreenState extends State<DoctorMainScreen> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(navItems.length, (index) {
-              final item = navItems[index];
-              final isSelected = _currentIndex == index;
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(navItems.length, (index) {
+                  final item = navItems[index];
+                  final isSelected = _currentIndex == index;
 
-              return _AnimatedDoctorNavTab(
-                icon: item.icon,
-                activeIcon: item.activeIcon,
-                label: item.label,
-                isSelected: isSelected,
-                onTap: () => _onTabSelected(index),
-              );
-            }),
+                  return _AnimatedDoctorNavTab(
+                    icon: item.icon,
+                    activeIcon: item.activeIcon,
+                    label: item.label,
+                    isSelected: isSelected,
+                    onTap: () => _onTabSelected(index),
+                  );
+                }),
+              ),
+            ),
           ),
         ),
       ),

@@ -241,16 +241,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'DOCTOR NOW',
+                                'PULSECARE',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 22,
                                   fontWeight: FontWeight.w900,
-                                  letterSpacing: 1.5,
+                                  letterSpacing: 2.0,
                                 ),
                               ),
                               Text(
-                                'Aura Clinical Network & Tele-OPD',
+                                'Clinical Hospital Network & Tele-OPD',
                                 style: TextStyle(
                                   color: Color(0xFF94A3B8),
                                   fontSize: 12,
@@ -411,12 +411,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'DOCTOR NOW',
+                              'PULSECARE',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w900,
-                                letterSpacing: 1.2,
+                                letterSpacing: 1.8,
                               ),
                             ),
                             Text(
@@ -437,7 +437,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Form Content
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width < 360 ? 16 : 24,
+                  vertical: 20,
+                ),
                 child: _buildFormContent(),
               ),
             ],
@@ -687,20 +690,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () => _launchInstantDemo('patient'),
                         style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                           side: const BorderSide(color: Color(0xFFBFDBFE)),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.person, size: 15, color: AppTheme.primaryColor),
-                            SizedBox(width: 6),
-                            Text(
-                              'VIP Patient View',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppTheme.primaryColor),
-                            ),
-                          ],
+                        child: const FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.person, size: 15, color: AppTheme.primaryColor),
+                              SizedBox(width: 6),
+                              Text(
+                                'VIP Patient View',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppTheme.primaryColor),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -710,20 +716,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () => _launchInstantDemo('doctor'),
                         style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                           side: const BorderSide(color: Color(0xFF99F6E4)),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.medical_services_rounded, size: 15, color: Color(0xFF0F766E)),
-                            SizedBox(width: 6),
-                            Text(
-                              'Doctor Console',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF0F766E)),
-                            ),
-                          ],
+                        child: const FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.medical_services_rounded, size: 15, color: Color(0xFF0F766E)),
+                              SizedBox(width: 6),
+                              Text(
+                                'Doctor Console',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF0F766E)),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

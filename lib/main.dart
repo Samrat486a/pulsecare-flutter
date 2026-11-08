@@ -16,16 +16,16 @@ void main() async {
     // Already initialized or fallback
   }
 
-  runApp(const DoctorNowApp());
+  runApp(const PulseCareApp());
 }
 
-class DoctorNowApp extends StatelessWidget {
-  const DoctorNowApp({super.key});
+class PulseCareApp extends StatelessWidget {
+  const PulseCareApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Doctor Now - Appointment System',
+      title: 'PulseCare - Clinical Appointment Portal',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const SplashScreen(),

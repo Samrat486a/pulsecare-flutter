@@ -60,136 +60,149 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
           const SizedBox(width: 8),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 20,
-              offset: const Offset(0, -4),
+      bottomNavigationBar: Builder(
+        builder: (context) {
+          final screenWidth = MediaQuery.of(context).size.width;
+          final isCompact = screenWidth < 360;
+
+          return Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: isCompact ? 14 : 24,
+              vertical: 14,
             ),
-          ],
-        ),
-        child: SafeArea(
-          child: Row(
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 20,
+                  offset: const Offset(0, -4),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Row(
                 children: [
-                  const Text(
-                    'OPD Consultation Fee',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.textSecondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Row(
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '₹${doc.ticketPrice.toInt()}',
-                        style: const TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w900,
-                          color: AppTheme.primaryColor,
-                          letterSpacing: -0.5,
+                      const Text(
+                        'OPD Consultation Fee',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.textSecondary,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(width: 6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF0FDF4),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Text(
-                          'IN-CLINIC',
-                          style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w800,
-                            color: AppTheme.successColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: MouseRegion(
-                  onEnter: (_) => setState(() => _isBookHovered = true),
-                  onExit: (_) => setState(() => _isBookHovered = false),
-                  cursor: SystemMouseCursors.click,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    height: 52,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: _isBookHovered
-                            ? [const Color(0xFF2563EB), const Color(0xFF1D4ED8)]
-                            : [AppTheme.primaryColor, const Color(0xFF1E3A8A)],
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: _isBookHovered
-                          ? [
-                              BoxShadow(
-                                color: AppTheme.primaryColor.withValues(alpha: 0.35),
-                                blurRadius: 16,
-                                offset: const Offset(0, 6),
-                              )
-                            ]
-                          : [
-                              BoxShadow(
-                                color: AppTheme.primaryColor.withValues(alpha: 0.20),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              )
-                            ],
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => BookingScreen(
-                              doctor: doc,
-                              patientUser: widget.patientUser,
+                      Row(
+                        children: [
+                          Text(
+                            '₹${doc.ticketPrice.toInt()}',
+                            style: TextStyle(
+                              fontSize: isCompact ? 22 : 26,
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.primaryColor,
+                              letterSpacing: -0.5,
                             ),
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.calendar_month_rounded, size: 18, color: Colors.white),
-                          SizedBox(width: 10),
-                          Text(
-                            'Book In-Clinic Slot',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                              letterSpacing: 0.3,
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF0FDF4),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Text(
+                              'IN-CLINIC',
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w800,
+                                color: AppTheme.successColor,
+                              ),
                             ),
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                  SizedBox(width: isCompact ? 12 : 24),
+                  Expanded(
+                    child: MouseRegion(
+                      onEnter: (_) => setState(() => _isBookHovered = true),
+                      onExit: (_) => setState(() => _isBookHovered = false),
+                      cursor: SystemMouseCursors.click,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        height: 52,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: _isBookHovered
+                                ? [const Color(0xFF2563EB), const Color(0xFF1D4ED8)]
+                                : [AppTheme.primaryColor, const Color(0xFF1E3A8A)],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: _isBookHovered
+                              ? [
+                                  BoxShadow(
+                                    color: AppTheme.primaryColor.withValues(alpha: 0.35),
+                                    blurRadius: 16,
+                                    offset: const Offset(0, 6),
+                                  )
+                                ]
+                              : [
+                                  BoxShadow(
+                                    color: AppTheme.primaryColor.withValues(alpha: 0.20),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  )
+                                ],
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BookingScreen(
+                                  doctor: doc,
+                                  patientUser: widget.patientUser,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          ),
+                          child: const FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.calendar_month_rounded, size: 18, color: Colors.white),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Book In-Clinic Slot',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -218,14 +231,14 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                             borderRadius: BorderRadius.circular(22),
                             child: Image.network(
                               doc.photoUrl,
-                              width: 106,
-                              height: 106,
+                              width: MediaQuery.of(context).size.width < 360 ? 84 : 106,
+                              height: MediaQuery.of(context).size.width < 360 ? 84 : 106,
                               fit: BoxFit.cover,
                               errorBuilder: (_, _, _) => Container(
-                                width: 106,
-                                height: 106,
+                                width: MediaQuery.of(context).size.width < 360 ? 84 : 106,
+                                height: MediaQuery.of(context).size.width < 360 ? 84 : 106,
                                 color: AppTheme.primaryLight,
-                                child: const Icon(Icons.person, size: 52, color: AppTheme.primaryColor),
+                                child: const Icon(Icons.person, size: 44, color: AppTheme.primaryColor),
                               ),
                             ),
                           ),
@@ -646,21 +659,27 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
         children: [
           Icon(icon, color: color, size: 22),
           const SizedBox(height: 6),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w900,
-              color: color,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w900,
+                color: color,
+              ),
             ),
           ),
           const SizedBox(height: 2),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 11,
-              color: AppTheme.textSecondary,
-              fontWeight: FontWeight.w600,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 11,
+                color: AppTheme.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
