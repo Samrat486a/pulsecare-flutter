@@ -73,7 +73,7 @@ class _BookingScreenState extends State<BookingScreen> {
           timeSlot: _selectedSlot!,
           problemDescription: _problemController.text.trim().isNotEmpty
               ? _problemController.text.trim()
-              : 'General Consultation',
+              : 'General Medical Consultation',
         ),
       ),
     );
@@ -83,7 +83,6 @@ class _BookingScreenState extends State<BookingScreen> {
   Widget build(BuildContext context) {
     final doc = widget.doctor;
 
-    // Next 14 days list
     final List<DateTime> nextDays = List.generate(
       14,
       (i) => DateTime.now().add(Duration(days: i + 1)),
@@ -92,55 +91,66 @@ class _BookingScreenState extends State<BookingScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('Book Appointment'),
+        title: const Text('Schedule Consultation'),
         backgroundColor: Colors.white,
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 16,
               offset: const Offset(0, -4),
             ),
           ],
         ),
-        child: Row(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Total Fee',
-                  style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
-                ),
-                Text(
-                  '₹${doc.ticketPrice.toInt()}',
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.primaryColor,
+        child: SafeArea(
+          child: Row(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Consultation Fee',
+                    style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _proceedToCheckout,
-                  child: const Text(
-                    'Proceed to Payment',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  Text(
+                    '₹${doc.ticketPrice.toInt()}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: AppTheme.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: _proceedToCheckout,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      elevation: 0,
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Continue to Payment', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                        SizedBox(width: 8),
+                        Icon(Icons.arrow_forward_rounded, size: 18),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -148,24 +158,25 @@ class _BookingScreenState extends State<BookingScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Doctor Quick Summary
+            // Doctor Summary Card
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: const Color(0xFFF1F5F9)),
+                boxShadow: AppTheme.subtleShadow,
               ),
               child: Row(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                     child: Image.network(
                       doc.photoUrl,
-                      width: 55,
-                      height: 55,
+                      width: 60,
+                      height: 60,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => const Icon(Icons.person, size: 30),
+                      errorBuilder: (_, _, _) => const Icon(Icons.person, size: 36),
                     ),
                   ),
                   const SizedBox(width: 14),
@@ -178,6 +189,7 @@ class _BookingScreenState extends State<BookingScreen> {
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
+                            color: AppTheme.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -189,6 +201,16 @@ class _BookingScreenState extends State<BookingScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                        const SizedBox(height: 2),
+                        Text(
+                          doc.clinicAddress,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppTheme.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -198,17 +220,26 @@ class _BookingScreenState extends State<BookingScreen> {
             const SizedBox(height: 24),
 
             // Select Date
-            const Text(
-              'Select Date',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: AppTheme.textPrimary,
-              ),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Select Consultation Date',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+                Text(
+                  'Next 14 Days',
+                  style: TextStyle(fontSize: 12, color: AppTheme.textMuted, fontWeight: FontWeight.w600),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: 80,
+              height: 84,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: nextDays.length,
@@ -221,16 +252,17 @@ class _BookingScreenState extends State<BookingScreen> {
 
                   return GestureDetector(
                     onTap: () => setState(() => _selectedDate = date),
-                    child: Container(
-                      width: 65,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 68,
                       decoration: BoxDecoration(
                         color: isSelected ? AppTheme.primaryColor : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(18),
                         border: Border.all(
-                          color: isSelected
-                              ? AppTheme.primaryColor
-                              : const Color(0xFFE2E8F0),
+                          color: isSelected ? AppTheme.primaryColor : const Color(0xFFE2E8F0),
+                          width: isSelected ? 2 : 1,
                         ),
+                        boxShadow: isSelected ? AppTheme.floatingShadow : AppTheme.subtleShadow,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -239,7 +271,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             DateFormat('EEE').format(date).toUpperCase(),
                             style: TextStyle(
                               fontSize: 11,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                               color: isSelected ? Colors.white70 : AppTheme.textSecondary,
                             ),
                           ),
@@ -247,8 +279,8 @@ class _BookingScreenState extends State<BookingScreen> {
                           Text(
                             DateFormat('d').format(date),
                             style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
                               color: isSelected ? Colors.white : AppTheme.textPrimary,
                             ),
                           ),
@@ -257,7 +289,8 @@ class _BookingScreenState extends State<BookingScreen> {
                             DateFormat('MMM').format(date),
                             style: TextStyle(
                               fontSize: 11,
-                              color: isSelected ? Colors.white70 : AppTheme.textSecondary,
+                              fontWeight: FontWeight.w500,
+                              color: isSelected ? Colors.white70 : AppTheme.textMuted,
                             ),
                           ),
                         ],
@@ -271,7 +304,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
             // Select Time Slot
             const Text(
-              'Select Available Slot',
+              'Select Preferred Time Slot',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -290,12 +323,16 @@ class _BookingScreenState extends State<BookingScreen> {
                   selectedColor: AppTheme.primaryColor,
                   labelStyle: TextStyle(
                     color: isSelected ? Colors.white : AppTheme.textPrimary,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                    fontSize: 13,
                   ),
                   backgroundColor: Colors.white,
                   side: BorderSide(
                     color: isSelected ? AppTheme.primaryColor : const Color(0xFFE2E8F0),
+                    width: isSelected ? 1.8 : 1,
                   ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   onSelected: (selected) {
                     if (selected) setState(() => _selectedSlot = slot);
                   },
@@ -314,33 +351,46 @@ class _BookingScreenState extends State<BookingScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            TextFormField(
-              controller: _patientNameController,
-              decoration: const InputDecoration(
-                labelText: 'Patient Name',
-                prefixIcon: Icon(Icons.person_outline),
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFFF1F5F9)),
+                boxShadow: AppTheme.subtleShadow,
+              ),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _patientNameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Full Name',
+                      prefixIcon: Icon(Icons.person_outline_rounded),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _patientPhoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                      prefixIcon: Icon(Icons.phone_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _problemController,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      labelText: 'Symptoms / Medical Concern',
+                      hintText: 'e.g. Persistent fever, cardiology review, surgical follow-up...',
+                      prefixIcon: Icon(Icons.medical_information_outlined),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 14),
-            TextFormField(
-              controller: _patientPhoneController,
-              keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
-                labelText: 'Phone Number',
-                prefixIcon: Icon(Icons.phone_outlined),
-              ),
-            ),
-            const SizedBox(height: 14),
-            TextFormField(
-              controller: _problemController,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Symptoms / Problem Description',
-                hintText: 'e.g. Mild chest pain, routine surgical follow up...',
-                prefixIcon: Icon(Icons.healing_outlined),
-              ),
-            ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
           ],
         ),
       ),

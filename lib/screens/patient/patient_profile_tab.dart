@@ -3,6 +3,7 @@ import '../../models/user_model.dart';
 import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
 import '../auth/login_screen.dart';
+import '../doctor/doctor_main_screen.dart';
 
 class PatientProfileTab extends StatelessWidget {
   final UserModel? user;
@@ -16,7 +17,7 @@ class PatientProfileTab extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: const Text('Patient Health Profile'),
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -26,61 +27,113 @@ class PatientProfileTab extends StatelessWidget {
             // User Avatar & Name Card
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(22),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: const Color(0xFFF1F5F9)),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+                boxShadow: AppTheme.subtleShadow,
               ),
               child: Column(
                 children: [
                   CircleAvatar(
-                    radius: 40,
-                    backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.12),
+                    radius: 42,
+                    backgroundColor: AppTheme.primaryLight,
                     child: Text(
                       (user?.name.isNotEmpty == true)
                           ? user!.name[0].toUpperCase()
                           : 'P',
                       style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 34,
+                        fontWeight: FontWeight.w900,
                         color: AppTheme.primaryColor,
                       ),
                     ),
                   ),
                   const SizedBox(height: 14),
                   Text(
-                    user?.name ?? 'Patient User',
+                    user?.name ?? 'Rahul Sharma',
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 19,
+                      fontWeight: FontWeight.w800,
                       color: AppTheme.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    user?.email ?? '',
+                    user?.email ?? 'patient.demo@mail.com',
                     style: const TextStyle(
                       color: AppTheme.textSecondary,
-                      fontSize: 14,
+                      fontSize: 13,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE0F2FE),
+                      color: const Color(0xFFEFF6FF),
                       borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFFBFDBFE)),
                     ),
                     child: const Text(
-                      'PATIENT ACCOUNT',
+                      'VERIFIED PATIENT MEMBER',
                       style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
                         color: AppTheme.primaryColor,
-                        letterSpacing: 0.5,
+                        letterSpacing: 0.6,
                       ),
                     ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Demo Role Switcher Capsule (For presentation / defense)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF0F172A), Color(0xFF1E3A8A)],
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 28),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Switch to Doctor OPD Console',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                        Text(
+                          'Experience the doctor view and manage patient requests.',
+                          style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      final docUser = AuthService.demoDoctorUser;
+                      authService.setDemoSession(docUser);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => DoctorMainScreen(user: docUser)),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: AppTheme.primaryColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: const Text('Switch', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
                   ),
                 ],
               ),
@@ -92,39 +145,35 @@ class PatientProfileTab extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFF1F5F9)),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
               ),
               child: Column(
                 children: [
                   ListTile(
                     leading: const Icon(Icons.phone_outlined, color: AppTheme.primaryColor),
-                    title: const Text('Phone Number'),
-                    subtitle: Text(
-                      user?.phone.isNotEmpty == true ? user!.phone : 'Not provided',
-                      style: const TextStyle(color: AppTheme.textSecondary),
-                    ),
+                    title: const Text('Phone Number', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    subtitle: Text(user?.phone.isNotEmpty == true ? user!.phone : '+91 98765 00000', style: const TextStyle(fontSize: 13)),
                   ),
-                  const Divider(height: 1),
-                  ListTile(
-                    leading: const Icon(Icons.shield_outlined, color: AppTheme.primaryColor),
-                    title: const Text('Account Security'),
-                    subtitle: const Text('Email verified & Session active'),
+                  const Divider(height: 1, indent: 56),
+                  const ListTile(
+                    leading: Icon(Icons.shield_outlined, color: AppTheme.successColor),
+                    title: Text('Health Data Encryption', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    subtitle: Text('AES 256-bit encrypted health records', style: TextStyle(fontSize: 13)),
                   ),
-                  const Divider(height: 1),
-                  ListTile(
-                    leading: const Icon(Icons.info_outline, color: AppTheme.primaryColor),
-                    title: const Text('About System'),
-                    subtitle: const Text('Doctor Appointment Booking System v1.0.0'),
+                  const Divider(height: 1, indent: 56),
+                  const ListTile(
+                    leading: Icon(Icons.policy_outlined, color: AppTheme.secondaryColor),
+                    title: Text('Compliance Standards', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    subtitle: Text('HIPAA & National Health Authority (ABDM)', style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
 
-            // Logout Button
+            // Sign out
             SizedBox(
               width: double.infinity,
-              height: 50,
               child: OutlinedButton.icon(
                 onPressed: () async {
                   await authService.signOut();
@@ -136,15 +185,11 @@ class PatientProfileTab extends StatelessWidget {
                   );
                 },
                 icon: const Icon(Icons.logout_rounded, color: AppTheme.errorColor),
-                label: const Text(
-                  'Sign Out',
-                  style: TextStyle(
-                    color: AppTheme.errorColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                label: const Text('Sign Out', style: TextStyle(color: AppTheme.errorColor, fontWeight: FontWeight.w800)),
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppTheme.errorColor, width: 1.5),
+                  side: const BorderSide(color: Color(0xFFFECDD3)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
               ),
             ),

@@ -23,7 +23,16 @@ class DoctorDashboardTab extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('Doctor Portal'),
+        title: const Row(
+          children: [
+            Icon(Icons.local_hospital_rounded, color: AppTheme.primaryColor, size: 22),
+            SizedBox(width: 8),
+            Text(
+              'Doctor Clinical Portal',
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+            ),
+          ],
+        ),
         backgroundColor: Colors.white,
         actions: [
           IconButton(
@@ -34,13 +43,10 @@ class DoctorDashboardTab extends StatelessWidget {
             padding: const EdgeInsets.only(right: 16),
             child: CircleAvatar(
               radius: 18,
-              backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.15),
+              backgroundColor: AppTheme.primaryLight,
               child: Text(
                 user?.name.isNotEmpty == true ? user!.name[0].toUpperCase() : 'D',
-                style: const TextStyle(
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -53,51 +59,96 @@ class DoctorDashboardTab extends StatelessWidget {
           final pendingCount = appointments.where((a) => a.status == 'pending').length;
           final confirmedCount = appointments.where((a) => a.status == 'confirmed').length;
           final totalCount = appointments.length;
+          final totalRevenue = appointments
+              .where((a) => a.status == 'confirmed' || a.status == 'completed')
+              .fold<double>(0.0, (sum, a) => sum + a.fee);
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Welcome Banner
+                // Welcome Executive Header
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(22),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFF0284C7), Color(0xFF0369A1)],
+                      colors: [Color(0xFF0F172A), Color(0xFF0369A1)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: AppTheme.cardShadow,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.verified_rounded, size: 14, color: Color(0xFF38BDF8)),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Senior Consultant Access',
+                                  style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: AppTheme.successColor.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.circle, color: AppTheme.successColor, size: 8),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Clinic Live',
+                                  style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
                       Text(
-                        'Welcome, ${user?.name ?? "Doctor"}',
+                        user?.name ?? 'Dr. Specialist',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.3,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
                       const Text(
-                        'Manage your patient appointments and clinic schedules.',
-                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                        'Monitor incoming consultation requests, confirm slots, and manage patient care.',
+                        style: TextStyle(color: Color(0xFFCBD5E1), fontSize: 13, height: 1.4),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 24),
 
-                // Stats Cards
+                // 4 Metric Counters (Clinical KPI Cards)
                 const Text(
-                  'Overview Statistics',
+                  'Practice Performance & Queue Stats',
                   style: TextStyle(
                     fontSize: 17,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
                     color: AppTheme.textPrimary,
                   ),
                 ),
@@ -105,53 +156,64 @@ class DoctorDashboardTab extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildMetricCard(
+                      child: _buildKPI(
                         title: 'Pending',
                         count: '$pendingCount',
-                        color: const Color(0xFFFEF3C7),
-                        textColor: const Color(0xFFD97706),
+                        color: const Color(0xFFD97706),
+                        bg: const Color(0xFFFEF3C7),
                         icon: Icons.hourglass_top_rounded,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     Expanded(
-                      child: _buildMetricCard(
+                      child: _buildKPI(
                         title: 'Confirmed',
                         count: '$confirmedCount',
-                        color: const Color(0xFFDCFCE7),
-                        textColor: const Color(0xFF16A34A),
-                        icon: Icons.check_circle_outline,
+                        color: const Color(0xFF16A34A),
+                        bg: const Color(0xFFDCFCE7),
+                        icon: Icons.check_circle_rounded,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     Expanded(
-                      child: _buildMetricCard(
-                        title: 'Total',
+                      child: _buildKPI(
+                        title: 'Total Visits',
                         count: '$totalCount',
-                        color: const Color(0xFFE0F2FE),
-                        textColor: const Color(0xFF0284C7),
-                        icon: Icons.people_outline,
+                        color: const Color(0xFF7C3AED),
+                        bg: const Color(0xFFF5F3FF),
+                        icon: Icons.people_alt_rounded,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _buildKPI(
+                        title: 'Revenue',
+                        count: '₹${totalRevenue.toInt()}',
+                        color: const Color(0xFF2563EB),
+                        bg: const Color(0xFFDBEAFE),
+                        icon: Icons.currency_rupee_rounded,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 28),
 
-                // Recent Appointment Requests
+                // Patient Requests Stream
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Recent Patient Requests',
+                      'Patient Action Queue',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                         color: AppTheme.textPrimary,
                       ),
                     ),
-                    TextButton(
+                    TextButton.icon(
                       onPressed: onViewAppointments,
-                      child: const Text('View All'),
+                      icon: const Text('Manage All', style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: const Icon(Icons.arrow_forward_ios_rounded, size: 12),
                     ),
                   ],
                 ),
@@ -163,20 +225,27 @@ class DoctorDashboardTab extends StatelessWidget {
                     padding: const EdgeInsets.all(32),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: const Color(0xFFF1F5F9)),
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.event_available, size: 48, color: Colors.grey.shade400),
-                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryLight,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.event_available_rounded, size: 36, color: AppTheme.primaryColor),
+                        ),
+                        const SizedBox(height: 14),
                         const Text(
-                          'No appointment requests yet',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          'No Pending Consultations',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
                         const Text(
-                          'When patients book appointments, they will appear here.',
+                          'When patients request an appointment, they will instantly appear here for your review.',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
                         ),
@@ -187,16 +256,18 @@ class DoctorDashboardTab extends StatelessWidget {
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: appointments.take(3).length,
+                    itemCount: appointments.take(4).length,
                     separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final appt = appointments[index];
+
                       return Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(18),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: const Color(0xFFF1F5F9)),
+                          boxShadow: AppTheme.subtleShadow,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,27 +275,42 @@ class DoctorDashboardTab extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  appt.patientName,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: AppTheme.primaryLight,
+                                      child: Text(
+                                        appt.patientName.isNotEmpty ? appt.patientName[0].toUpperCase() : 'P',
+                                        style: const TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          appt.patientName,
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                        ),
+                                        Text(
+                                          appt.patientPhone,
+                                          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: appt.status == 'confirmed'
-                                        ? const Color(0xFFDCFCE7)
-                                        : const Color(0xFFFEF3C7),
+                                    color: appt.status == 'confirmed' ? const Color(0xFFDCFCE7) : const Color(0xFFFEF3C7),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     appt.status.toUpperCase(),
                                     style: TextStyle(
-                                      color: appt.status == 'confirmed'
-                                          ? const Color(0xFF16A34A)
-                                          : const Color(0xFFD97706),
+                                      color: appt.status == 'confirmed' ? const Color(0xFF16A34A) : const Color(0xFFD97706),
                                       fontWeight: FontWeight.bold,
                                       fontSize: 10,
                                     ),
@@ -232,18 +318,26 @@ class DoctorDashboardTab extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            const Divider(height: 20),
+                            Row(
+                              children: [
+                                const Icon(Icons.schedule_rounded, size: 15, color: AppTheme.textSecondary),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '${DateFormat('dd MMM').format(appt.appointmentDate)} • ${appt.timeSlot}',
+                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  '₹${appt.fee.toInt()} Paid',
+                                  style: const TextStyle(fontWeight: FontWeight.w800, color: AppTheme.primaryColor, fontSize: 13),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 6),
                             Text(
-                              '${DateFormat('dd MMM yyyy').format(appt.appointmentDate)} • ${appt.timeSlot}',
-                              style: const TextStyle(
-                                color: AppTheme.textSecondary,
-                                fontSize: 13,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
                               'Reason: ${appt.disease}',
-                              style: const TextStyle(fontSize: 13),
+                              style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
                             ),
                             if (appt.status == 'pending') ...[
                               const SizedBox(height: 14),
@@ -260,7 +354,7 @@ class DoctorDashboardTab extends StatelessWidget {
                                       style: OutlinedButton.styleFrom(
                                         foregroundColor: AppTheme.errorColor,
                                         side: const BorderSide(color: AppTheme.errorColor),
-                                        padding: const EdgeInsets.symmetric(vertical: 8),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
                                       ),
                                       child: const Text('Decline'),
                                     ),
@@ -276,9 +370,9 @@ class DoctorDashboardTab extends StatelessWidget {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: AppTheme.successColor,
-                                        padding: const EdgeInsets.symmetric(vertical: 8),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
                                       ),
-                                      child: const Text('Accept'),
+                                      child: const Text('Confirm'),
                                     ),
                                   ),
                                 ],
@@ -289,6 +383,7 @@ class DoctorDashboardTab extends StatelessWidget {
                       );
                     },
                   ),
+                const SizedBox(height: 20),
               ],
             ),
           );
@@ -297,39 +392,39 @@ class DoctorDashboardTab extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricCard({
+  Widget _buildKPI({
     required String title,
     required String count,
     required Color color,
-    required Color textColor,
+    required Color bg,
     required IconData icon,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(16),
+        color: bg,
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: textColor, size: 24),
-          const SizedBox(height: 12),
+          Icon(icon, color: color, size: 22),
+          const SizedBox(height: 10),
           Text(
             count,
             style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-              color: textColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              color: color,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             title,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: textColor.withValues(alpha: 0.8),
+              color: color.withValues(alpha: 0.8),
             ),
           ),
         ],

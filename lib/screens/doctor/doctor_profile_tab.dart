@@ -5,6 +5,7 @@ import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import '../../theme/app_theme.dart';
 import '../auth/login_screen.dart';
+import '../patient/patient_main_screen.dart';
 
 class DoctorProfileTab extends StatefulWidget {
   final UserModel? user;
@@ -103,10 +104,6 @@ class _DoctorProfileTabState extends State<DoctorProfileTab> {
       body: StreamBuilder<DoctorModel?>(
         stream: _dbService.getDoctorStream(doctorId),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting && _loadedDoctor == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
           final doc = snapshot.data;
           if (doc != null) {
             _populateControllers(doc);
@@ -117,53 +114,71 @@ class _DoctorProfileTabState extends State<DoctorProfileTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Doctor Card Header
+                // Top Doctor Card
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFFF1F5F9)),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    boxShadow: AppTheme.subtleShadow,
                   ),
-                  child: Row(
+                  child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 36,
-                        backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.12),
-                        child: const Icon(
-                          Icons.medical_services_rounded,
-                          size: 34,
-                          color: AppTheme.primaryColor,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          doc?.photoUrl ??
+                              'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=500&auto=format&fit=crop&q=80',
+                          width: 86,
+                          height: 86,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => const CircleAvatar(
+                            radius: 43,
+                            backgroundColor: AppTheme.primaryLight,
+                            child: Icon(Icons.person, size: 40, color: AppTheme.primaryColor),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(height: 14),
+                      Text(
+                        widget.user?.name ?? doc?.name ?? 'Dr. Ashis Ghosh',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        doc?.specialty ?? 'Senior Consultant Surgeon',
+                        style: const TextStyle(
+                          color: AppTheme.primaryColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0FDF4),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: const Color(0xFFBBF7D0)),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
+                            Icon(Icons.verified, size: 14, color: AppTheme.successColor),
+                            SizedBox(width: 6),
                             Text(
-                              doc?.name ?? widget.user?.name ?? 'Dr. Specialist',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              doc?.specialty ?? 'General Physician',
-                              style: const TextStyle(
-                                color: AppTheme.primaryColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              widget.user?.email ?? '',
-                              style: const TextStyle(
-                                color: AppTheme.textSecondary,
-                                fontSize: 13,
+                              'MCI / NMC REGISTERED PRACTITIONER',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                                color: AppTheme.successColor,
+                                letterSpacing: 0.6,
                               ),
                             ),
                           ],
@@ -172,114 +187,118 @@ class _DoctorProfileTabState extends State<DoctorProfileTab> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 20),
+
+                // Switch to Patient View Demo Capsule
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF0F172A), Color(0xFF0D9488)],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 28),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Switch to Patient Portal',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                            ),
+                            Text(
+                              'Test the patient appointment booking flow and checkout.',
+                              style: TextStyle(color: Color(0xFFCBD5E1), fontSize: 11),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          final pUser = AuthService.demoPatientUser;
+                          _authService.setDemoSession(pUser);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => PatientMainScreen(user: pUser)),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF0F766E),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        child: const Text('Switch', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 24),
 
-                // Editable Fields
+                // Edit Clinic Details
                 const Text(
-                  'Manage Clinic & Practice Details',
+                  'Clinical Practice Settings',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
                     color: AppTheme.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 12),
 
-                // Fee
-                const Text(
-                  'Consultation Fee (Ticket Price in ₹)',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
+                // Consultation Fee
+                const Text('Consultation OPD Fee (₹)', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                 const SizedBox(height: 6),
-                TextFormField(
+                TextField(
                   controller: _feeController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.currency_rupee),
-                    hintText: '1000',
+                    prefixIcon: Icon(Icons.currency_rupee_rounded, size: 20),
+                    hintText: 'e.g. 1000',
                   ),
                 ),
                 const SizedBox(height: 16),
 
                 // Clinic Address
-                const Text(
-                  'Clinic Address & Location',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
+                const Text('Clinic / Hospital Affiliation', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                 const SizedBox(height: 6),
-                TextFormField(
+                TextField(
                   controller: _clinicController,
                   decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.location_on_outlined),
-                    hintText: 'Clinic location',
+                    prefixIcon: Icon(Icons.location_on_outlined, size: 20),
+                    hintText: 'Hospital Name & Clinic Location',
                   ),
                 ),
                 const SizedBox(height: 16),
 
                 // About
-                const Text(
-                  'About Bio',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
+                const Text('Clinical Bio', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                 const SizedBox(height: 6),
-                TextFormField(
+                TextField(
                   controller: _aboutController,
                   maxLines: 3,
                   decoration: const InputDecoration(
-                    hintText: 'Summary of clinical expertise...',
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Education
-                const Text(
-                  'Education & Degrees',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 6),
-                TextFormField(
-                  controller: _educationController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.school_outlined),
-                    hintText: 'MBBS - AIIMS Delhi',
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Experience
-                const Text(
-                  'Experience & History',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 6),
-                TextFormField(
-                  controller: _experienceController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.work_outline),
-                    hintText: 'Surgeon intern at Dhanbad Medical College',
+                    hintText: 'Summary of specialty and clinical philosophy...',
                   ),
                 ),
                 const SizedBox(height: 24),
 
-                // Save Button
+                // Save Profile Button
                 SizedBox(
                   width: double.infinity,
-                  height: 50,
                   child: ElevatedButton(
                     onPressed: _isSaving ? null : _saveProfile,
                     child: _isSaving
                         ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                           )
-                        : const Text(
-                            'Save Changes',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
+                        : const Text('Save Practice Changes'),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -287,7 +306,6 @@ class _DoctorProfileTabState extends State<DoctorProfileTab> {
                 // Sign Out
                 SizedBox(
                   width: double.infinity,
-                  height: 50,
                   child: OutlinedButton.icon(
                     onPressed: () async {
                       await _authService.signOut();
@@ -299,15 +317,9 @@ class _DoctorProfileTabState extends State<DoctorProfileTab> {
                       );
                     },
                     icon: const Icon(Icons.logout_rounded, color: AppTheme.errorColor),
-                    label: const Text(
-                      'Sign Out',
-                      style: TextStyle(
-                        color: AppTheme.errorColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    label: const Text('Sign Out', style: TextStyle(color: AppTheme.errorColor, fontWeight: FontWeight.bold)),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: AppTheme.errorColor, width: 1.5),
+                      side: const BorderSide(color: Color(0xFFFECDD3)),
                     ),
                   ),
                 ),

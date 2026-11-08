@@ -28,14 +28,18 @@ class _SplashScreenState extends State<SplashScreen> {
     // Seed sample doctors in the background if database is empty
     await _dbService.seedInitialDoctorsIfEmpty();
 
-    await Future.delayed(const Duration(milliseconds: 1200));
+    await Future.delayed(const Duration(milliseconds: 1400));
     if (!mounted) return;
 
     final User? currentUser = _authService.currentUser;
     if (currentUser == null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        PageRouteBuilder(
+          pageBuilder: (_, _, _) => const LoginScreen(),
+          transitionsBuilder: (_, a, _, c) => FadeTransition(opacity: a, child: c),
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
       );
       return;
     }
@@ -69,49 +73,87 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF090D16),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 90,
-              height: 90,
+              width: 96,
+              height: 96,
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [AppTheme.primaryColor, Color(0xFF0D9488)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x331D4ED8),
+                    blurRadius: 28,
+                    offset: Offset(0, 10),
+                  ),
+                ],
               ),
               child: const Icon(
                 Icons.medical_services_rounded,
-                size: 46,
-                color: AppTheme.primaryColor,
+                size: 48,
+                color: Colors.white,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
             const Text(
               'DOCTOR NOW',
               style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.2,
-                color: AppTheme.textPrimary,
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 2.0,
+                color: Colors.white,
               ),
             ),
             const SizedBox(height: 8),
             const Text(
-              'Smart Doctor Appointment System',
+              'Aura Clinical Hospital Network & OPD Dispatch',
               style: TextStyle(
-                fontSize: 14,
-                color: AppTheme.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF94A3B8),
+                letterSpacing: 0.3,
+              ),
+            ),
+            const SizedBox(height: 18),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0x1A10B981),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0x3310B981)),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(radius: 3, backgroundColor: Color(0xFF10B981)),
+                  SizedBox(width: 8),
+                  Text(
+                    'NABH · ISO 9001:2015 · HIPAA CERTIFIED',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF34D399),
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 48),
             const SizedBox(
-              width: 28,
-              height: 28,
+              width: 24,
+              height: 24,
               child: CircularProgressIndicator(
-                strokeWidth: 2.8,
-                color: AppTheme.primaryColor,
+                strokeWidth: 2.5,
+                color: Color(0xFF38BDF8),
               ),
             ),
           ],
